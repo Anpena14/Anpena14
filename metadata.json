@@ -1,0 +1,7 @@
+{
+  "name": "Macetamania",
+  "description": "Una aplicación completa de gestión de presupuesto personal para el control de tus finanzas.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
