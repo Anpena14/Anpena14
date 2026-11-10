@@ -185,7 +185,11 @@ class Manejador(http.server.BaseHTTPRequestHandler):
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
             try:
+                if b.get("token"):
+                    mod.guardar_token(str(b["token"]))
                 r = mod.actualizar(base.RAIZ, verbose=False)
+            except mod.SinAcceso as e:
+                return self._json({"ok": False, "pide_token": True, "msg": str(e)})
             except Exception as e:
                 return self._json({"ok": False, "msg": f"No se pudo actualizar: {e}"})
             if r["cambiados"] or r["nuevos"] or r["fusionados"]:

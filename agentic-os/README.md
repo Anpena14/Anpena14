@@ -28,10 +28,11 @@ Si macOS bloquea el `.command`, ve a Ajustes del Sistema → Privacidad y seguri
   ```bash
   python3 aos.py actualizar
   ```
-- **Primera vez**, si tu carpeta todavía no tiene `actualizar.py`. En Terminal, entra en la carpeta y pega:
+- **Repositorio privado:** hace falta un token de GitHub de **solo lectura**. Créalo en GitHub → Settings → Developer settings → Fine-grained tokens, con acceso solo a `anpena14/anpena14` y permiso «Contents: Read-only». Guárdalo una vez en cada equipo:
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/anpena14/anpena14/refs/heads/claude/peaceful-cannon-re5lkd/agentic-os/actualizar.py | python3 -
+  python3 actualizar.py --guardar-token
   ```
+  Queda en `~/.config/agentic-os/github_token`, fuera del proyecto, y solo tú puedes leerlo. Si usas GitHub CLI (`gh auth login`), no hace falta guardar nada. El botón ⟳ también te lo pide la primera vez.
 
 La actualización **nunca toca**:
 

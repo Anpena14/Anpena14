@@ -9,8 +9,11 @@ y reemplaza solo el código. Conserva:
 Antes de tocar nada guarda una copia de lo que cambia en data/respaldos/<fecha>/.
 
 Uso, dentro de la carpeta:   python3 actualizar.py
-Primera vez (si tu carpeta aún no tiene este archivo), en Terminal dentro de la carpeta:
-  curl -fsSL https://raw.githubusercontent.com/anpena14/anpena14/refs/heads/claude/peaceful-cannon-re5lkd/agentic-os/actualizar.py | python3 -
+
+Repositorio PRIVADO: hace falta un token de GitHub de solo lectura (fine-grained, solo este repo, permiso
+«Contents: Read-only»). Se busca, en orden: variable AOS_GITHUB_TOKEN o GITHUB_TOKEN, el archivo
+~/.config/agentic-os/github_token (fuera del proyecto, permisos 600) o `gh auth token` si usas GitHub CLI.
+Guardarlo:  python3 actualizar.py --guardar-token
 """
 import datetime as dt
 import io
@@ -19,12 +22,50 @@ import os
 import shutil
 import sys
 import tarfile
+import urllib.error
 import urllib.request
 
 REPO = "anpena14/anpena14"
 RAMA = "claude/peaceful-cannon-re5lkd"
 SUBCARPETA = "agentic-os/"
-URL = f"https://codeload.github.com/{REPO}/tar.gz/refs/heads/{RAMA}"
+URL = f"https://api.github.com/repos/{REPO}/tarball/refs/heads/{RAMA}"
+RUTA_TOKEN = os.path.expanduser("~/.config/agentic-os/github_token")
+
+
+def token():
+    for var in ("AOS_GITHUB_TOKEN", "GITHUB_TOKEN"):
+        if os.environ.get(var, "").strip():
+            return os.environ[var].strip()
+    try:
+        with open(RUTA_TOKEN, encoding="utf-8") as f:
+            t = f.read().strip()
+            if t:
+                return t
+    except OSError:
+        pass
+    try:
+        import subprocess
+        r = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, timeout=10)
+        if r.returncode == 0 and r.stdout.strip():
+            return r.stdout.strip()
+    except Exception:
+        pass
+    return None
+
+
+def guardar_token(valor):
+    valor = (valor or "").strip()
+    if not valor:
+        raise ValueError("Token vacío.")
+    os.makedirs(os.path.dirname(RUTA_TOKEN), exist_ok=True)
+    fd = os.open(RUTA_TOKEN, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write(valor)
+    os.chmod(RUTA_TOKEN, 0o600)
+
+
+class SinAcceso(RuntimeError):
+    pass
 FUSIONAR = {"config.json", "agentes.json", "skills.json"}
 NO_TOCAR = ("data/", "boveda-prueba/01-Inbox/")
 
@@ -65,9 +106,19 @@ def actualizar(raiz=None, url=URL, verbose=True):
     log = print if verbose else (lambda *a, **k: None)
     antes = version(raiz)
     log(f"Descargando la última versión de {REPO} ({RAMA})…")
-    req = urllib.request.Request(url, headers={"User-Agent": "agentic-os-actualizador"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        datos = r.read()
+    cab = {"User-Agent": "agentic-os-actualizador", "Accept": "application/vnd.github+json"}
+    tk = token() if url.startswith("https://api.github.com/") else None
+    if tk:
+        cab["Authorization"] = f"Bearer {tk}"
+    req = urllib.request.Request(url, headers=cab)
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            datos = r.read()
+    except urllib.error.HTTPError as e:
+        if e.code in (401, 403, 404):
+            raise SinAcceso("El repositorio es privado y " + ("el token no tiene acceso (revisa que sea de este repo con «Contents: Read-only» y que no haya caducado)." if tk else
+                            "no hay token guardado. Crea uno de solo lectura en GitHub y guárdalo con: python3 actualizar.py --guardar-token")) from None
+        raise
     sello = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     respaldo = os.path.join(raiz, "data", "respaldos", sello)
     cambiados, nuevos, fusionados = [], [], []
@@ -117,6 +168,11 @@ def actualizar(raiz=None, url=URL, verbose=True):
 
 
 if __name__ == "__main__":
+    if "--guardar-token" in sys.argv:
+        import getpass
+        guardar_token(getpass.getpass("Pega tu token de GitHub (no se verá): "))
+        print(f"Guardado en {RUTA_TOKEN} (solo tú puedes leerlo).")
+        sys.exit(0)
     try:
         actualizar()
     except Exception as e:

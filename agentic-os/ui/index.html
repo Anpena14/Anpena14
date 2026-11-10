@@ -108,7 +108,8 @@ $('launch').onclick=async()=>{const s=skills[active],msg=$('launchMsg');msg.clas
  if(r.bloqueos.length){msg.classList.add('bad');msg.textContent=`${r.tarea.id} creada pero no se ejecutó: ${r.bloqueos.join(' ')}`}else{msg.classList.add('ok');msg.replaceChildren(`${r.tarea.id}: ${quien} en curso${r.router?' (elegido por el router: '+r.router.motivo+')':''}. `,h('a',{href:'/tarea.html?id='+r.tarea.id},'Ver evidencia'))}
  cargarActividad()};
 $('actualizar').onclick=async()=>{const b=$('actualizar');b.disabled=true;$('velo').hidden=false;$('veloTxt').textContent='Buscando la última versión…';
- const r=await api('/api/actualizar',{});
+ let r=await api('/api/actualizar',{});
+ if(!r.ok&&r.pide_token){const tk=prompt(r.msg+'\n\nPega aquí tu token de GitHub de solo lectura (se guarda solo en este equipo):');if(tk){$('veloTxt').textContent='Probando el token…';r=await api('/api/actualizar',{token:tk})}}
  if(!r.ok){$('veloTxt').textContent=r.msg;setTimeout(()=>{$('velo').hidden=true;b.disabled=false},4000);return}
  if(!r.reinicia){$('veloTxt').textContent=`Ya tienes la última versión (v${r.despues}).`;setTimeout(()=>{$('velo').hidden=true;b.disabled=false},2500);return}
  $('veloTxt').textContent=`Actualizado a v${r.despues}. Reiniciando el panel…`;
