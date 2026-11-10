@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="aos-token" content="__AOS_TOKEN__"><title>MAPS · Cerebro de Aneudys</title>
+<link rel="stylesheet" href="/estilo.css">
+<script type="importmap">{"imports":{"three":"/vendor/three.module.min.js","three/addons/":"/vendor/"}}</script>
+<style>
+:root{color-scheme:dark;--bg:#0c1018;--panel:#111824;--line:#253042;--text:#edf1f8;--muted:#a1b0c3;--mint:#8cf2cc;--violet:#ac9eff}*{box-sizing:border-box}body{margin:0;color:var(--text);min-height:100vh;font:14px/1.5 system-ui,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible,canvas:focus-visible{outline:2px solid var(--mint);outline-offset:3px}a{color:var(--mint)}
+header{display:flex;align-items:center;justify-content:space-between;padding:17px 30px;border-bottom:1px solid var(--line);gap:10px}.mark{display:flex;align-items:center;gap:12px}.logo{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--mint);color:#10241f;font-size:20px}.mark strong{letter-spacing:.12em}.mark small{display:block;color:var(--muted)}.badge,.tag{font:11px ui-monospace,monospace;color:var(--mint);background:#153029;border:1px solid #26453c;padding:6px 9px;border-radius:20px;white-space:nowrap}.badge.warn{color:#ffca87;background:#3a2f1e;border-color:#6b5432}
+.wrap{max-width:1540px;padding:25px 30px 30px;margin:auto}.kicker,.eyebrow{color:var(--mint);font:11px ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase}h1{margin:5px 0;font-size:clamp(26px,4vw,43px);letter-spacing:-.045em;line-height:1.1}h2{font-size:18px;margin:3px 0}p{color:var(--muted);margin:6px 0 12px}.intro{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:18px;flex-wrap:wrap}.intro .btns{display:flex;gap:8px;flex-wrap:wrap}
+.board{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 17px;border-bottom:1px solid var(--line);flex-wrap:wrap}.modes{display:flex;gap:4px}.modes button,.ghost{border:1px solid var(--line);background:#141d2b;padding:6px 10px;border-radius:8px;text-decoration:none;color:var(--text)}.modes button[aria-pressed=true],.ghost[aria-pressed=true]{background:#263348;border-color:#53627c}.ghost[disabled]{opacity:.45;cursor:not-allowed}input,select,textarea{background:#0e1420;color:var(--text);border:1px solid #38475c;padding:8px 10px;border-radius:8px;min-width:0}
+.canvas{position:relative}#cerebro{display:block;width:100%;height:min(70vh,700px);min-height:400px;touch-action:none;cursor:grab}.hint{position:absolute;right:12px;top:10px;font-size:11.5px;color:var(--muted);background:#0e1420cc;border:1px solid var(--line);padding:4px 8px;border-radius:8px;pointer-events:none}
+.legend{display:flex;gap:6px;flex-wrap:wrap;padding:12px 17px;border-top:1px solid var(--line)}.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;border:1px solid var(--line);background:#141d2b;border-radius:20px;padding:3px 10px;color:var(--text)}.chip[aria-pressed=false]{opacity:.4}.chip i,.dot{display:inline-block;width:9px;height:9px;border-radius:50%;flex:none}.agentes-leg{display:flex;gap:12px;flex-wrap:wrap;padding:0 17px 13px;font-size:12px;color:var(--muted)}.agentes-leg span{display:inline-flex;align-items:center;gap:6px}
+.side{display:grid;align-content:start;gap:14px}.pad{padding:17px}.detail{min-height:170px}.ref{font:12px ui-monospace,monospace;color:#c7bbff;overflow-wrap:anywhere}.preview{white-space:pre-wrap;font-size:12.5px;color:#cdd6e4;background:#0e1420;border:1px solid var(--line);border-radius:10px;padding:10px;max-height:220px;overflow:auto;margin:8px 0}.links{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.links button{font-size:11.5px;border:1px solid var(--line);background:#141d2b;border-radius:14px;padding:2px 8px}
+.row{padding:9px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}.row small{display:block;color:var(--muted)}.row .who{display:flex;gap:9px;align-items:center;min-width:0}.row .who .dot{width:12px;height:12px;box-shadow:0 0 10px currentColor}.acts{display:flex;gap:6px;margin-left:auto;align-items:center}
+.bottom{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px}.cta{background:var(--mint);color:#132521;border:0;border-radius:9px;font-weight:700;padding:9px 12px}.sectionhead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.empty{font-size:12px;color:var(--muted)}.queue{max-height:300px;overflow:auto}
+.pill{font-size:11px;padding:2px 7px;border-radius:10px;white-space:nowrap}.pill.ok{color:#8cf2cc;background:#153029}.pill.wait{color:#ffca87;background:#3a2f1e}.pill.sim{color:#a1b0c3;background:#1d2635}.pill.bad{color:#ff9d9d;background:#3b2024}
+dialog{width:min(460px,calc(100vw - 32px));background:var(--panel);color:var(--text);border:1px solid #485772;border-radius:14px;padding:20px}dialog::backdrop{background:#050911cf}form{display:grid;gap:12px}label{display:grid;gap:4px;color:var(--muted)}label.check{display:flex;gap:8px;align-items:center}textarea{min-height:64px;resize:vertical}.formActions{display:flex;justify-content:flex-end;gap:8px}.formmsg{color:#ff9d9d;font-size:12px;min-height:16px}footer{margin-top:13px;color:var(--muted);font-size:12px;padding-bottom:100px}
+@media(max-width:1000px){.board{grid-template-columns:1fr}}@media(max-width:760px){.bottom{grid-template-columns:1fr}.wrap,header{padding-left:14px;padding-right:14px}#cerebro{height:58vh}.hint{display:none}}
+</style></head><body>
+<header><div class="mark"><span class="logo">✳</span><div><strong>MAPS / AGENTIC OS</strong><small>Centro de mando personal · <a href="/">volver al centro de mando</a></small></div></div><span class="badge" id="modo">● Conectando…</span></header>
+<main class="wrap"><div class="intro"><div><div class="kicker">01 / Espacio de trabajo</div><h1>Cerebro de Aneudys</h1><p id="sub">Explora tu memoria y mira a tus agentes trabajar en ella.</p></div><div class="btns"><button class="ghost" id="demo">✦ Ver demostración</button><button class="cta" id="newTask">＋ Nueva tarea</button></div></div>
+<div class="board"><section class="card" aria-label="Mapa del cerebro">
+<div class="toolbar"><div><div class="eyebrow">M · Memoria en vivo</div><h2>Mapa del cerebro</h2></div><div class="modes" role="group" aria-label="Vista del mapa"><button data-mode="anillos" aria-pressed="true">Anillos</button><button data-mode="areas" aria-pressed="false">Áreas</button></div><input id="search" type="search" placeholder="Buscar una nota…" aria-label="Buscar una nota"><button class="ghost" id="encuadrar" title="Volver a la vista completa">⤢</button></div>
+<div class="canvas"><div id="cerebro" class="cerebro3d" role="img" aria-label="Mapa 3D interactivo de la bóveda. Arrastra para girar, rueda para acercar, clic en una nota para ver su detalle."></div><span class="hint">Arrastra para girar · rueda para zoom · doble clic para volar a una nota · clic en un agente para seguirlo</span></div>
+<div class="legend" id="carpetas" aria-label="Filtrar por carpeta"></div>
+<div class="agentes-leg" id="agLeg"></div></section>
+<aside class="side"><section class="card pad detail" id="detalle"><div class="eyebrow" id="detailType">Nodo central</div><h2 id="detailTitle">Tu cerebro</h2><p id="detailText">Toca una nota para ver su contenido y sus conexiones. Los agentes aparecen con su color cuando trabajan con tus notas.</p><div id="detailRef" class="ref"></div><div id="detailBody"></div></section>
+<section class="card pad"><div class="eyebrow">A · Agentes</div><h2>Equipo de trabajo</h2><div id="agents"></div></section></aside></div>
+<div class="bottom"><section class="card pad"><div class="sectionhead"><div><div class="eyebrow">P · Pulso</div><h2>Cola de tareas</h2></div><span class="tag" id="count"></span></div><div id="queue" class="queue" aria-live="polite"></div></section>
+<section class="card pad"><div class="eyebrow">S · Pantalla</div><h2>Rutinas y actividad</h2><div class="row"><div><strong>Resumen de pendientes</strong><small>Cuenta la cola en el panel; no llama a ningún agente.</small></div><button class="ghost" id="run">▶ Calcular</button></div><div id="resumen" class="empty"></div><div id="activity" class="queue empty" aria-live="polite">Aún no hay actividad.</div></section></div>
+<footer id="pie">El mapa lee tu bóveda en solo lectura (títulos, carpetas y enlaces) y no se envía a ningún agente.</footer></main>
+<dialog id="modal"><form id="taskForm"><h2>Nueva tarea</h2>
+<label>Encargo<textarea name="encargo" required maxlength="1000" placeholder="Ej. Revisar los pendientes de Pulso"></textarea></label>
+<label>Proyecto<select name="proyecto" id="fProyecto"></select></label>
+<label>Skill<select name="skill" id="fSkill"></select></label>
+<label>Responsable<select name="agente" id="fAgente"></select></label>
+<label>Criterio de cierre<input name="criterio" required maxlength="600" placeholder="Ej. Cada pendiente cita su sección de la ficha"></label>
+<label class="check"><input type="checkbox" name="ejecutar" checked> Ejecutar al agregar (verás al agente viajar a tu cerebro)</label>
+<div class="formmsg" id="formMsg"></div>
+<div class="formActions"><button class="ghost" type="button" id="cancel">Cancelar</button><button class="cta">Agregar a la cola</button></div></form></dialog>
+<script src="/comun.js"></script>
+<script src="/chat.js"></script>
+<script type="module">
+import { fondo } from '/fondo.js';
+import { montar } from '/cerebro3d.js';
+fondo();
+const by=id=>document.getElementById(id);let AG=[],SK=[],EST={},TAREAS=[],GRAFO=null;
+const clsE={conectado:'ok',pendiente:'wait',simulado:'sim'},clsT={lista_para_revision:'ok',cerrada:'ok',pendiente:'wait',en_curso:'wait',fallida:'bad',simulada:'sim'};
+const colorDe=id=>(AG.find(a=>a.id===id)||{}).color||'#94a3b8';
+const mapa=montar(by('cerebro'),{
+ onDatos:g=>{GRAFO=g;by('sub').textContent=`${g.es_real?'Tu bóveda real':'Bóveda de prueba'} «${g.boveda}» · ${g.nodos.filter(n=>n.tipo==='nota').length} notas · ${g.enlaces.filter(e=>e[2]!=='carpeta').length} enlaces · solo lectura`;
+  const box=by('carpetas');box.replaceChildren(...g.carpetas.map(c=>{const b=h('button',{class:'chip','aria-pressed':'true',title:'Mostrar u ocultar '+c},h('i',{style:'background:'+mapa.estado.colorCarpeta[c]}),c);b.onclick=()=>{mapa.alternarCarpeta(c);b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true')};return b}))},
+ onSelect:n=>mostrar(n),
+ onAgente:(id,sig)=>pintarAgentes(),
+ onEvento:()=>{cargarTareas();cargarActividad()}});
+async function mostrar(n){const body=by('detailBody');body.replaceChildren();
+ if(!n){by('detailType').textContent='Nodo central';by('detailTitle').textContent='Tu cerebro';by('detailText').textContent='Toca una nota para ver su contenido y sus conexiones.';by('detailRef').textContent='';return}
+ by('detailType').textContent=n.tipo==='carpeta'?'Carpeta':'Nota · '+n.carpeta;by('detailTitle').textContent=n.nombre;by('detailText').textContent=`${n.grado} conexiones`;by('detailRef').textContent=n.tipo==='carpeta'?n.carpeta+'/':n.id;
+ const vec=mapa.vecinos(n.id).filter(v=>v&&v.tipo==='nota').slice(0,18);
+ if(vec.length)body.append(h('div',{class:'links'},...vec.map(v=>h('button',{onclick:()=>mapa.seleccionar(v.id),title:'Ir a '+v.nombre},v.nombre))));
+ if(n.tipo==='nota'){const pre=h('div',{class:'preview'},'Cargando…');body.append(pre);const v=await api('/api/nota?ruta='+encodeURIComponent(n.id));pre.textContent=v.texto||'(vacía)';
+  const acts=h('div',{class:'acts',style:'margin-left:0;flex-wrap:wrap'},h('a',{class:'ghost',href:'obsidian://open?path='+encodeURIComponent(GRAFO.ruta+'/'+n.id)},'Abrir en Obsidian'));
+  const proyecto=(EST.fichas_autorizadas||[]).find(p=>n.nombre.toLowerCase().includes(p.toLowerCase()));
+  if(proyecto)acts.append(h('button',{class:'cta',onclick:()=>abrirTarea(proyecto)},'Encargar tarea de '+proyecto));
+  body.append(acts)}}
+function pintarAgentes(){const box=by('agents');box.replaceChildren();by('agLeg').replaceChildren(...AG.map(a=>h('span',{},h('i',{class:'dot',style:`background:${a.color}`}),a.nombre)));
+ AG.forEach(a=>{const sig=mapa.estado.seguir===a.id;const b=h('button',{class:'ghost','aria-pressed':sig?'true':'false',title:'La cámara sigue al agente'},sig?'Siguiendo':'Seguir');b.onclick=()=>{mapa.seguir(a.id);pintarAgentes()};
+  box.append(h('div',{class:'row'},h('div',{class:'who'},h('i',{class:'dot',style:`background:${a.color};color:${a.color}`}),h('div',{},h('strong',{},a.nombre),h('small',{},a.rol))),h('div',{class:'acts'},h('span',{class:'pill '+clsE[a.estado]},NOMBRE_ESTADO[a.estado]),b)))})}
+async function cargarAgentes(){AG=await api('/api/agentes?refrescar=0');pintarAgentes()}
+async function cargarTareas(){TAREAS=await api('/api/tareas');by('count').textContent=TAREAS.length+' tareas';const q=by('queue');q.replaceChildren();
+ if(!TAREAS.length){q.textContent='Sin tareas. Crea la primera con «Nueva tarea».';return}
+ TAREAS.forEach(t=>{const acts=h('div',{class:'acts'});
+  if(['pendiente','fallida'].includes(t.estado)){const b=h('button',{class:'ghost'},t.estado==='fallida'?'Reintentar':'Ejecutar');b.onclick=async()=>{b.disabled=true;const r=await api(`/api/tareas/${t.id}/ejecutar`,{});if(!r.ok)alert(r.msg);else{if(mapa.estado.seguir!==t.agente)mapa.seguir(t.agente);pintarAgentes()}cargarTareas()};acts.append(b)}
+  if(t.estado==='lista_para_revision'){const b=h('button',{class:'ghost'},'Cerrar');b.onclick=async()=>{await api(`/api/tareas/${t.id}/cerrar`,{});cargarTareas()};acts.append(b)}
+  acts.append(h('a',{class:'ghost',href:'/tarea.html?id='+t.id},'Ver'));
+  q.append(h('div',{class:'row'},h('div',{class:'who'},h('i',{class:'dot',style:`background:${colorDe(t.agente)};color:${colorDe(t.agente)}`}),h('div',{},h('strong',{},`${t.id} · ${t.encargo}`),h('small',{},`${t.proyecto} · ${(AG.find(a=>a.id===t.agente)||{}).nombre||t.agente} · ciclos ${t.ejecuciones.length}`))),h('span',{class:'pill '+clsT[t.estado]},ESTADOS_TAREA[t.estado]),acts))})}
+async function cargarActividad(){const log=await api('/api/actividad');if(!log.length)return;by('activity').replaceChildren(...log.slice(0,25).map(x=>h('div',{class:'row'},h('div',{},h('strong',{},x.texto),h('small',{},hora(x.ts)+(x.tarea?' · '+x.tarea:''))))))}
+function abrirTarea(proyecto){by('formMsg').textContent='';llenarForm(proyecto);by('modal').showModal()}
+function llenarForm(sel){const fp=by('fProyecto'),fs=by('fSkill'),fa=by('fAgente');
+ const proyectos=[...new Set([...(EST.fichas_autorizadas||[]),'Macetamania','Oli’s Boutique','KADA'])];fp.replaceChildren(...proyectos.map(p=>{const ok=EST.fichas_autorizadas.includes(p);return h('option',{value:p,disabled:!ok},ok?p:p+' · ficha no autorizada')}));fp.value=sel||EST.fichas_autorizadas[0]||'Pulso';
+ const skillsDe=()=>SK.filter(s=>s.disponible&&s.fichas.includes(fp.value));
+ const agentesDe=()=>{const s=SK.find(x=>x.id===fs.value)||{agentes:[...new Set(skillsDe().flatMap(x=>x.agentes))]};fa.replaceChildren(h('option',{value:'auto'},'✦ Automático (router)'),...(s?s.agentes:[]).map(id=>{const a=AG.find(x=>x.id===id);return h('option',{value:id},a?`${a.nombre} · ${NOMBRE_ESTADO[a.estado]}`:id)}));fa.value='auto'};
+ const skillsF=()=>{fs.replaceChildren(h('option',{value:'auto'},'✦ Automática según el encargo'),...skillsDe().map(s=>h('option',{value:s.id},s.nombre)));fs.value=skillsDe()[0]?.id||'auto';agentesDe()};fp.onchange=skillsF;fs.onchange=agentesDe;skillsF()}
+by('newTask').onclick=()=>abrirTarea();by('cancel').onclick=()=>by('modal').close();
+by('taskForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);
+ const r=await api('/api/tareas',{encargo:f.get('encargo'),proyecto:f.get('proyecto'),skill:f.get('skill'),agente:f.get('agente'),criterio:f.get('criterio'),ejecutar:!!f.get('ejecutar')});
+ if(r.error){by('formMsg').textContent=r.error;return}
+ if(r.ejecutando&&mapa.estado.seguir!==r.tarea.agente){mapa.seguir(r.tarea.agente);pintarAgentes()}
+ if(r.router)cargarActividad();
+ e.currentTarget.reset();by('modal').close();cargarTareas()};
+by('run').onclick=()=>{const c=k=>TAREAS.filter(t=>t.estado===k).length;by('resumen').textContent=`${c('pendiente')} pendiente(s), ${c('en_curso')} en curso, ${c('lista_para_revision')} en revisión, ${c('fallida')} fallida(s), ${c('cerrada')} cerrada(s).`};
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mapa.modo(b.dataset.mode);document.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+by('search').oninput=e=>mapa.buscar(e.target.value);by('encuadrar').onclick=()=>{mapa.encuadrar();pintarAgentes()};by('demo').onclick=()=>mapa.demo();
+(async()=>{EST=await api('/api/estado');SK=await api('/api/skills');const m=by('modo');if(EST.boveda_es_prueba){m.textContent='● LOCAL · ESCRITURA EN PRUEBA'}else{m.textContent='● BÓVEDA REAL';m.classList.add('warn')}
+ await cargarAgentes();cargarTareas();cargarActividad();setInterval(()=>{cargarTareas();cargarActividad()},5000)})();
+</script></body></html>

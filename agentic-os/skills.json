@@ -1,0 +1,35 @@
+{
+  "_ayuda": "Skills registradas. El panel solo ejecuta estas. 'fichas' son las únicas notas que se cargan (deben estar en fichas_autorizadas de config.json).",
+  "contexto-pulso": {
+    "nombre": "Preparar contexto de Pulso",
+    "descripcion": "Extraer objetivo, decisiones y pendientes.",
+    "agente_sugerido": "codex",
+    "agentes": ["codex", "claude", "local", "hermes", "antigravity", "simulador"],
+    "fichas": ["Pulso"],
+    "instrucciones": "Con la ficha, prepara un contexto breve para retomar el encargo: objetivo, reglas y decisiones vigentes que aplican, pendientes relacionados y riesgos. Cita la sección de la ficha de la que sale cada punto."
+  },
+  "revisar-entrega": {
+    "nombre": "Revisar una entrega",
+    "descripcion": "Registrar hallazgos y evidencia.",
+    "agente_sugerido": "antigravity",
+    "agentes": ["antigravity", "codex", "claude", "local", "simulador"],
+    "fichas": ["Pulso"],
+    "instrucciones": "Revisa el encargo contra la ficha y el criterio de cierre. Lista hallazgos (bloqueante / mejora / ok), cada uno con la regla de la ficha que lo respalda. No corrijas nada: solo revisa."
+  },
+  "cierre-sesion": {
+    "nombre": "Cerrar una sesión",
+    "descripcion": "Proponer una nota para la bandeja.",
+    "agente_sugerido": "hermes",
+    "agentes": ["hermes", "local", "claude", "codex", "simulador"],
+    "fichas": ["Pulso"],
+    "instrucciones": "Redacta el cierre de sesión del encargo con la plantilla de la bóveda: pedido, decisión, trabajo y evidencia, archivo, bloqueo y siguiente paso. Si algo no consta en el encargo o la ficha, escribe «por confirmar»."
+  },
+  "voz-macetamania": {
+    "nombre": "Redactar con la voz de Macetamania",
+    "descripcion": "Preparar un borrador para revisión.",
+    "agente_sugerido": "claude",
+    "agentes": ["claude", "local", "simulador"],
+    "fichas": ["Macetamania"],
+    "instrucciones": "Redacta el borrador pedido con la voz y reglas de la marca de la ficha."
+  }
+}

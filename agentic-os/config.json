@@ -1,0 +1,47 @@
+{
+  "_ayuda": "Configuración del piloto. Las rutas relativas son relativas a esta carpeta. El panel solo escribe en una bóveda que tenga el archivo .boveda-de-prueba, salvo que pongas permitir_boveda_real en true. mapa_usa_boveda_real: el mapa dibuja tu bóveda real en SOLO LECTURA (títulos, carpetas y enlaces); los agentes no la reciben.",
+  "boveda": "boveda-prueba",
+  "boveda_real": "~/Downloads/Unificado de Aneudys 3",
+  "permitir_boveda_real": false,
+  "mapa_usa_boveda_real": true,
+  "puerto": 8787,
+  "fichas_autorizadas": {
+    "Pulso": "20-Proyectos/Software/Pulso.md"
+  },
+  "timeout_segundos": 600,
+  "ollama_url": "http://127.0.0.1:11434",
+  "ollama_modelo": "",
+  "router": {
+    "_ayuda": "orden: métodos a probar. externo: tu router (p. ej. uno de código abierto basado en Jev) por url (POST JSON) o cmd (lista de argumentos, JSON por stdin). Debe devolver {\"agente\": id, \"motivo\": texto}.",
+    "orden": [
+      "externo",
+      "ollama",
+      "reglas"
+    ],
+    "usar_ollama": true,
+    "externo": {
+      "activo": false,
+      "nombre": "Jev (código abierto)",
+      "url": "http://127.0.0.1:8000/route",
+      "cmd": [],
+      "timeout": 20
+    }
+  },
+  "planes": {
+    "_ayuda": "Opcional: nombre de tu plan y tus límites de tokens para dibujar la barra de %. Codex trae su % real en sus registros.",
+    "claude": {
+      "nombre": "",
+      "limite_tokens_5h": null,
+      "limite_tokens_7d": null
+    },
+    "codex": {
+      "nombre": ""
+    },
+    "antigravity": {
+      "nombre": ""
+    },
+    "local": {
+      "nombre": "Gratis · en tu Mac"
+    }
+  }
+}

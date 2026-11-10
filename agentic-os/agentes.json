@@ -1,0 +1,126 @@
+{
+  "_ayuda": "Registro de agentes. El panel solo ejecuta los que están aquí, siempre con estos argumentos fijos: {prompt} es el encargo armado por el motor y {workdir} una carpeta temporal aislada con la ficha. Nunca se usa una shell. 'color' es el color con el que el agente aparece y viaja por el cerebro.",
+  "codex": {
+    "nombre": "Codex",
+    "rol": "Coordina y valida",
+    "tipo": "cli",
+    "nube": true,
+    "binario": "codex",
+    "version": [
+      "codex",
+      "--version"
+    ],
+    "cmd": [
+      "codex",
+      "exec",
+      "--skip-git-repo-check",
+      "--sandbox",
+      "read-only",
+      "-C",
+      "{workdir}",
+      "{prompt}"
+    ],
+    "permisos": "Sandbox de solo lectura dentro de una carpeta temporal que solo contiene la ficha autorizada.",
+    "color": "#3B82F6",
+    "conectar": {
+      "instalar": "npm install -g @openai/codex",
+      "entrar": "codex login"
+    }
+  },
+  "claude": {
+    "nombre": "Claude Code",
+    "rol": "Análisis y redacción",
+    "tipo": "cli",
+    "nube": true,
+    "binario": "claude",
+    "version": [
+      "claude",
+      "--version"
+    ],
+    "cmd": [
+      "claude",
+      "-p",
+      "{prompt}",
+      "--disallowedTools",
+      "Bash",
+      "Edit",
+      "Write",
+      "NotebookEdit",
+      "WebFetch",
+      "WebSearch"
+    ],
+    "permisos": "Sin terminal, escritura ni web; carpeta temporal que solo contiene la ficha autorizada.",
+    "color": "#D97757",
+    "conectar": {
+      "instalar": "npm install -g @anthropic-ai/claude-code",
+      "entrar": "claude   (y escribe /login)"
+    }
+  },
+  "antigravity": {
+    "nombre": "Antigravity",
+    "rol": "Revisión y pruebas",
+    "tipo": "ide",
+    "nube": true,
+    "binario": "gemini",
+    "version": [
+      "gemini",
+      "--version"
+    ],
+    "cmd": [
+      "gemini",
+      "-p",
+      "{prompt}"
+    ],
+    "permisos": "Antigravity es un editor sin modo de terminal verificable. El piloto lo conecta por Gemini CLI (mismo motor). Modo de aprobación por defecto: no aprueba herramientas sin ti; carpeta temporal aislada.",
+    "nota": "Punto de conexión directo: abre la carpeta de evidencia de la tarea en Antigravity y pídele que revise salida.md contra el criterio de cierre.",
+    "color": "#34D399",
+    "conectar": {
+      "instalar": "npm install -g @google/gemini-cli",
+      "entrar": "gemini   (inicia sesión con tu cuenta de Google)"
+    }
+  },
+  "hermes": {
+    "nombre": "Hermes",
+    "rol": "Entrada de encargos",
+    "tipo": "cli",
+    "nube": false,
+    "binario": "hermes",
+    "version": [
+      "hermes",
+      "--version"
+    ],
+    "cmd": [
+      "hermes",
+      "-z",
+      "{prompt}"
+    ],
+    "permisos": "El modo -z aprueba sus propias acciones; por eso corre en una carpeta temporal que solo contiene la ficha. Es local solo si su modelo configurado es de Ollama.",
+    "nota": "En Pulso, Hermes queda fuera del flujo de desarrollo (futuro operador).",
+    "color": "#EAB308",
+    "conectar": {
+      "instalar": "curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash",
+      "entrar": "hermes setup   y luego   hermes model   (elige Ollama: http://localhost:11434/v1)"
+    },
+    "usage_file": true
+  },
+  "local": {
+    "nombre": "IA local (Ollama)",
+    "rol": "Encargos con alcance concreto",
+    "tipo": "ollama",
+    "nube": false,
+    "permisos": "Solo texto: recibe la ficha dentro del encargo y devuelve una respuesta. No tiene herramientas ni acceso a archivos.",
+    "color": "#E5E7EB",
+    "conectar": {
+      "instalar": "brew install ollama   (o la app de ollama.com)",
+      "entrar": "ollama pull qwen3   (o el modelo que prefieras) y deja Ollama abierto"
+    }
+  },
+  "simulador": {
+    "nombre": "Simulador",
+    "rol": "Prueba del flujo sin IA",
+    "tipo": "simulador",
+    "nube": false,
+    "permisos": "No llama a ninguna IA. Sus resultados quedan marcados como simulados y nunca pasan a revisión.",
+    "color": "#94A3B8"
+  }
+}

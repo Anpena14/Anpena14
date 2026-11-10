@@ -1,0 +1,41 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="aos-token" content="__AOS_TOKEN__"><title>Tarea · Agentic OS</title>
+<link rel="stylesheet" href="/estilo.css">
+<script type="importmap">{"imports":{"three":"/vendor/three.module.min.js","three/addons/":"/vendor/"}}</script>
+<style>
+:root{color-scheme:dark;--bg:#0d111b;--pane:#151c2b;--border:#2b3549;--text:#eef3ff;--muted:#a7b5cc;--lime:#cbf589;--lav:#bdb2ff}*{box-sizing:border-box}body{margin:0;color:var(--text);font:14px/1.5 system-ui,sans-serif}a{color:var(--lime)}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid var(--lime);outline-offset:4px}header,main{max-width:1100px;margin:auto;padding:0 30px}header{height:74px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--border)}.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.09em}.mark{background:var(--lime);color:#1d2d11;border-radius:9px;width:34px;height:34px;display:grid;place-items:center;font-size:21px}.cap{font:11px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--lav)}h1{font-size:clamp(24px,3.4vw,38px);line-height:1.1;margin:8px 0;letter-spacing:-.04em}h2{font-size:17px;margin:4px 0 9px}p{color:var(--muted);margin:5px 0 12px}.card{background:var(--pane);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0;min-width:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 18px}.grid div small{display:block;color:var(--muted);font-size:12px}.pill{white-space:nowrap;font-size:11px;padding:3px 8px;border-radius:12px;color:var(--lav);background:#252843}.pill.ok{color:#cbf589;background:#26341d}.pill.wait{color:#ffca87;background:#3a2f1e}.pill.sim{color:#a7b5cc;background:#232b3b}.pill.bad{color:#ff9d9d;background:#3b2024}.cta,.ghost{border-radius:8px;padding:7px 10px;text-decoration:none;display:inline-block}.cta{background:var(--lime);color:#1b2810;border:0;font-weight:750}.ghost{background:#1c2638;color:var(--text);border:1px solid #36445d}.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#0f1624;border:1px solid #2b3549;border-radius:10px;padding:12px;max-height:460px;overflow:auto;font-size:12.5px;margin:6px 0}code{font:12px ui-monospace,monospace;color:#c7bbff;overflow-wrap:anywhere}ul.checks{list-style:none;padding:0;margin:6px 0}ul.checks li{padding:3px 0}.bad{color:#ff9d9d}.ok{color:var(--lime)}details summary{cursor:pointer;color:var(--muted);margin:8px 0}@media(max-width:650px){header,main{padding-left:12px;padding-right:12px}}
+</style></head><body>
+<header><div class="brand"><span class="mark">✳</span> AGENTIC OS / EVIDENCIA</div><span><a href="/">Centro de mando</a> · <a href="/maps.html">Cola de tareas</a></span></header>
+<main><div id="app"><p>Cargando…</p></div></main>
+<script src="/comun.js"></script>
+<script src="/chat.js"></script>
+<script type="module">import { fondo } from '/fondo.js'; fondo();</script>
+<script>
+const id=new URLSearchParams(location.search).get('id');const app=document.getElementById('app');
+const cls={lista_para_revision:'ok',cerrada:'ok',pendiente:'wait',en_curso:'wait',fallida:'bad',simulada:'sim'};
+function dato(t,v){return h('div',{},h('small',{},t),v)}
+async function accion(a){const r=await api(`/api/tareas/${id}/${a}`,{});if(r.ok===false||r.error)alert(r.msg||r.error);cargar()}
+async function cargar(){const t=await api('/api/tareas/'+encodeURIComponent(id||''));if(t.error){app.replaceChildren(h('p',{},'No existe esa tarea.'));return}
+ const ags=await api('/api/agentes?refrescar=0');const nom=x=>(ags.find(a=>a.id===x)||{}).nombre||x;
+ const acts=h('div',{class:'acts'});
+ if(['pendiente','fallida'].includes(t.estado)&&!t.en_curso)acts.append(h('button',{class:'cta',onclick:()=>accion('ejecutar')},t.estado==='fallida'?'↻ Reintentar':'▶ Ejecutar'));
+ if(t.estado==='lista_para_revision')acts.append(h('button',{class:'cta',onclick:()=>accion('cerrar')},'✔ Revisado: cerrar'));
+ if(['lista_para_revision','simulada'].includes(t.estado))acts.append(h('button',{class:'ghost',onclick:()=>accion('devolver')},'Devolver a pendiente'));
+ const cab=h('section',{},h('div',{class:'cap'},`${t.id} · ${t.proyecto}`),h('h1',{},t.encargo),h('span',{class:'pill '+cls[t.estado]},(t.en_curso?'En curso':ESTADOS_TAREA[t.estado])),
+  h('div',{class:'card'},h('div',{class:'grid'},dato('Agente',nom(t.agente)),dato('Skill',t.skill),dato('Profundidad',t.profundidad),dato('Creada',hora(t.creada)),dato('Actualizada',hora(t.actualizada)),dato('Ciclos',`${t.ejecuciones.filter(e=>!e.simulada).length} de 3`)),
+   h('p',{},h('b',{},'Criterio de cierre: '),t.criterio),t.bloqueos&&t.bloqueos.length?h('p',{class:'bad'},'No se puede ejecutar: '+t.bloqueos.join(' ')):null,acts));
+ const ejec=[...t.ejecuciones].reverse().map(e=>h('section',{class:'card'},
+  h('div',{class:'cap'},`${e.id} · ${nom(e.agente)}${e.simulada?' · simulada':''}`),
+  h('h2',{},e.verificable?'Resultado verificable':e.simulada?'Simulación (no cuenta como resultado)':'Sin resultado verificable'),
+  h('div',{class:'grid'},dato('Inicio',hora(e.inicio)),dato('Duración',(e.segundos??'—')+' s'),dato('Código de salida',String(e.codigo??'—')),dato('Modelo',e.modelo||'—')),
+  h('ul',{class:'checks'},...(e.checks||[]).map(c=>h('li',{class:c.ok?'ok':'bad'},`${c.ok?'✔':'✖'} ${c.nombre} — ${c.detalle}`))),
+  e.error?h('p',{class:'bad'},e.error):null,
+  h('details',{},h('summary',{},'Datos de la ejecución'),h('p',{},'Comando: ',h('code',{},(e.argv||[]).join(' '))),
+   h('p',{},'Carpeta de evidencia: ',h('code',{},e.carpeta||'—')),h('p',{},'SHA-256 encargo: ',h('code',{},e.encargo_sha256||'—')),h('p',{},'SHA-256 salida: ',h('code',{},e.salida_sha256||'—')),
+   ...Object.entries(e.fichas||{}).map(([n,f])=>h('p',{},`Ficha ${n}: `,h('code',{},`${f.ruta} · ${f.sha256.slice(0,16)}…`)))),
+  h('h2',{},'Salida del agente'),h('pre',{},e.salida_texto||'(vacía)'),
+  e.propuesta?h('div',{},h('h2',{},'Nota propuesta para la bandeja'),h('p',{},'Guardada en la bóveda de prueba: ',h('code',{},e.propuesta),'. Incorporarla a la ficha oficial queda bajo tu revisión.'),h('pre',{},e.propuesta_texto||'')):
+   (e.propuesta_error?h('p',{class:'bad'},e.propuesta_error):null)));
+ app.replaceChildren(cab,...(ejec.length?ejec:[h('section',{class:'card'},h('p',{},'Aún no se ha ejecutado.'))]));
+ if(t.en_curso||t.estado==='en_curso')setTimeout(cargar,2500)}
+cargar();
+</script></body></html>

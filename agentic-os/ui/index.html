@@ -1,0 +1,118 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="aos-token" content="__AOS_TOKEN__"><title>Aneudys · Agentic OS</title>
+<link rel="stylesheet" href="/estilo.css">
+<script type="importmap">{"imports":{"three":"/vendor/three.module.min.js","three/addons/":"/vendor/"}}</script>
+<style>
+:root{color-scheme:dark;--bg:#0d111b;--pane:#151c2b;--border:#2b3549;--text:#eef3ff;--muted:#a7b5cc;--lime:#cbf589;--lav:#bdb2ff}*{box-sizing:border-box}body{margin:0;color:var(--text);font:14px/1.5 system-ui,sans-serif;min-height:100vh}button,input,select,textarea{font:inherit}a{color:inherit}button,select{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--lime);outline-offset:4px}
+header,main{max-width:1430px;margin:auto;padding:0 30px}header{height:74px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(120,140,190,.18)}.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.09em}.mark{background:var(--lime);color:#1d2d11;border-radius:9px;width:34px;height:34px;display:grid;place-items:center;font-size:21px;box-shadow:0 0 24px rgba(203,245,137,.45)}.hderecha{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.demo,.cap{font:11px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}.demo{color:var(--lime);padding:6px 10px;border:1px solid #476139;border-radius:20px}.demo.warn{color:#ffca87;border-color:#6b5432}
+.hero{padding:30px 0 20px;display:flex;justify-content:space-between;align-items:end;gap:12px}h1{font-size:clamp(34px,5vw,62px);line-height:1;margin:8px 0;letter-spacing:-.055em;background:linear-gradient(100deg,#eef3ff 20%,#cbf589 45%,#bdb2ff 60%,#eef3ff 80%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:brillo 9s linear infinite}
+h2{font-size:19px;margin:4px 0 9px;letter-spacing:-.02em}p{color:var(--muted);margin:5px 0 12px}.cap{color:var(--lav)}
+.layout{display:grid;grid-template-columns:1fr 1.28fr 1fr;gap:16px;align-items:start}.stack{display:grid;gap:16px}.card{border-radius:18px;padding:17px;min-width:0}.cardhead,.row,.controls{display:flex;align-items:center;justify-content:space-between;gap:8px}.row{padding:9px 0;border-top:1px solid rgba(120,140,190,.16)}.row small{display:block;color:var(--muted)}
+.pill{white-space:nowrap;font-size:11px;color:var(--lav);background:#252843;padding:3px 7px;border-radius:12px}.pill.ok{color:#cbf589;background:#26341d}.pill.wait{color:#ffca87;background:#3a2f1e}.pill.sim{color:#a7b5cc;background:#232b3b}.pill.bad{color:#ff9d9d;background:#3b2024}
+.cta,.ghost{border-radius:9px;padding:7px 11px;text-decoration:none;display:inline-block}.cta{background:var(--lime);color:#1b2810;border:0;font-weight:750}.cta[disabled],.ghost[disabled]{opacity:.45;cursor:not-allowed}.ghost{background:rgba(28,38,56,.8);color:var(--text);border:1px solid #36445d}.ghost:hover:not([disabled]){border-color:#5a6c8c;transform:translateY(-1px)}
+.brain{text-align:center;overflow:hidden;padding-bottom:14px}.brain .cerebro3d{height:270px;border-radius:14px;margin:6px 0 8px;cursor:pointer}
+.deck{display:grid;gap:8px}.skill{display:block;width:100%;text-align:left;padding:10px 12px;background:rgba(25,34,54,.7);border:1px solid #36435b;border-radius:11px;color:var(--text)}.skill:hover{border-color:#56688a;transform:translateX(2px)}.skill[aria-pressed=true]{border-color:var(--lime);background:rgba(37,49,45,.85);box-shadow:0 0 0 1px rgba(203,245,137,.25),0 6px 24px rgba(203,245,137,.08)}.skill[aria-disabled=true]{opacity:.5}.skill span{display:block;color:var(--muted);font-size:12px}
+.controls{flex-wrap:wrap;margin-top:10px}.controls label{display:grid;gap:4px;flex:1;min-width:110px;color:var(--muted);font-size:12px}.controls label.full{flex-basis:100%}
+select,input,textarea{min-width:0;background:rgba(15,22,36,.85);color:var(--text);border:1px solid #39475e;border-radius:9px;padding:7px 9px}textarea{resize:vertical;min-height:58px}.controls .cta{align-self:end}.search{width:100%;margin-bottom:8px}
+.activity{max-height:300px;overflow:auto}.muted,footer{color:var(--muted);font-size:12px}footer{padding:18px 0 110px}.date{color:var(--muted);white-space:nowrap}
+.apps{display:flex;gap:7px;flex-wrap:wrap}.app{padding:5px 9px;border:1px solid #38455d;border-radius:8px;color:var(--muted);text-decoration:none}.app.on{color:var(--text);border-color:#4d6a3c}
+.agent .checks{font-size:11px;color:var(--muted);margin-top:2px}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:middle;box-shadow:0 0 10px currentColor}
+.conectar{font-size:12px;color:var(--muted);background:rgba(10,15,25,.6);border:1px solid #2b3549;border-radius:10px;padding:8px 10px;margin:2px 0 8px;display:grid;gap:5px}.conectar code{font:11.5px ui-monospace,monospace;color:#c7bbff;overflow-wrap:anywhere;background:#0b111c;border-radius:6px;padding:3px 6px;display:block}.conectar .copiar{justify-self:start;font-size:11px;padding:2px 8px}
+.msg-l{font-size:12px;margin-top:8px;min-height:18px}.msg-l.bad{color:#ff9d9d}.msg-l.ok{color:var(--lime)}
+.velo{position:fixed;inset:0;background:rgba(5,9,17,.8);backdrop-filter:blur(6px);display:grid;place-items:center;z-index:80;color:var(--text);font-size:16px}.velo[hidden]{display:none}.velo div{display:grid;gap:10px;justify-items:center}.velo i{width:34px;height:34px;border:3px solid #39475e;border-top-color:var(--lime);border-radius:50%;animation:girar 1s linear infinite}
+@media(max-width:1100px){.layout{grid-template-columns:1fr 1.2fr}.stack:last-child{grid-column:1/-1;grid-template-columns:1fr 1fr}}@media(max-width:700px){header,main{padding-left:12px;padding-right:12px}header{height:auto;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}.layout,.stack:last-child{grid-template-columns:1fr}.hero{align-items:start;flex-direction:column}}
+</style></head><body>
+<header><div class="brand"><span class="mark">✳</span> ANEUDYS / AGENTIC OS</div><div class="hderecha"><span class="demo" id="modo">● Conectando…</span><button class="ghost" id="actualizar" title="Trae la última versión sin tocar tus datos">⟳ Actualizar <span id="ver" class="muted"></span></button></div></header>
+<main><section class="hero"><div><div class="cap">Centro de mando · ARMS</div><h1>Tu trabajo, en un lugar.</h1><p>Organiza tus proyectos, habla con tus agentes y mira cómo trabajan en tu cerebro.</p></div><span class="date" id="today"></span></section>
+<div class="layout">
+<div class="stack">
+<section class="card"><div class="cardhead"><div><div class="cap">Agentes</div><h2>Equipo</h2></div><button class="ghost" id="refrescar" title="Volver a comprobar instalación">↻</button></div><div id="team"><p class="muted">Comprobando…</p></div>
+<p class="muted">«Probar» hace una llamada mínima real. Los pendientes muestran cómo conectarlos.</p></section>
+<section class="card"><div class="cap">Uso</div><h2>Consumo</h2><div id="uso" class="uso"><p class="muted">Leyendo registros locales…</p></div></section>
+<section class="card"><div class="cap">R · Rutinas</div><h2>Próximas acciones</h2>
+<div class="row"><div><strong>Resumen del día</strong><small>Hermes · 08:00 · prevista</small></div><button class="ghost" disabled title="El piloto empieza sin automatizaciones programadas">Desactivada</button></div>
+<div class="row"><div><strong>Revisar pendientes de Pulso</strong><small>Codex · 16:00 · prevista</small></div><button class="ghost" disabled title="El piloto empieza sin automatizaciones programadas">Desactivada</button></div>
+<p class="muted">Sin automatizaciones programadas en el piloto.</p></section>
+</div>
+<div class="stack">
+<section class="card brain"><div class="cap">M · Memoria</div><h2>Cerebro de Aneudys</h2>
+<div class="cerebro3d" id="mini" role="img" aria-label="Vista 3D en vivo de tu cerebro; clic para abrir el mapa"></div>
+<p id="miniTxt">Tu bóveda en vivo. Cuando un agente trabaja, lo verás viajar con su color.</p><a class="cta" href="/maps.html">Abrir mapa del cerebro ↗</a></section>
+<section class="card"><div class="cap">A · Aplicaciones</div><h2>Tu mesa de trabajo</h2><div class="apps"><a class="app on" id="obsidian" href="#">Obsidian</a><button class="app on" id="abrirChat" style="background:none;cursor:pointer">Chat por voz</button><span class="app">Telegram</span><span class="app">Calendario</span></div><p class="muted">Telegram y Calendario: previstas, sin conectar. Atajo del chat: ⌘K.</p></section>
+<section class="card"><div class="cap">Biblioteca</div><h2>Entregables</h2><input class="search" id="search" type="search" placeholder="Buscar un entregable…" aria-label="Buscar entregables"><div id="artifacts"></div></section>
+</div>
+<div class="stack">
+<section class="card"><div class="cap">S · Skills</div><h2>Lanzador de skills</h2><p class="muted">Escribe la tarea; en «Automático» el router elige el agente que más conviene.</p>
+<div id="deck" class="deck" role="group" aria-label="Skills registradas"></div>
+<div class="controls">
+<label class="full">Encargo<textarea id="encargo" maxlength="1000" placeholder="Ej. Resume las reglas de ventas y caja para retomar el desarrollo"></textarea></label>
+<label class="full">Criterio de cierre<input id="criterio" maxlength="600" placeholder="Ej. Cada regla cita su sección de la ficha"></label>
+<label>Agente<select id="agent"></select></label><label>Profundidad<select id="effort"><option>Breve</option><option selected>Normal</option><option>Detallada</option></select></label><button class="cta" id="launch">▶ Ejecutar</button></div>
+<div class="msg-l" id="launchMsg" aria-live="polite"></div>
+</section>
+<section class="card"><div class="cap">Registro de la sesión</div><h2>Actividad</h2><div id="activity" class="activity muted" aria-live="polite">Sin actividad todavía.</div></section>
+</div></div>
+<footer id="pie">Panel local · solo escucha en este Mac.</footer></main>
+<div class="velo" id="velo" hidden><div><i></i><span id="veloTxt">Actualizando…</span></div></div>
+<script src="/comun.js"></script>
+<script src="/chat.js"></script>
+<script type="module">
+import { fondo } from '/fondo.js';
+import { montar } from '/cerebro3d.js';
+fondo();
+const $=id=>document.getElementById(id);let skills=[],agentes=[],active=0,estado={};
+$('today').textContent=new Intl.DateTimeFormat('es-DO',{weekday:'long',month:'long',day:'numeric',timeZone:'America/Santo_Domingo'}).format(new Date());
+const row=(name,desc,pill,cls)=>{const item=h('div',{class:'row'},h('div',{},h('strong',{},name),h('small',{},desc)));if(pill)item.append(h('span',{class:'pill '+(cls||'')},pill));return item};
+const clsEstado={conectado:'ok',pendiente:'wait',simulado:'sim'};
+async function cargarEstado(){estado=await api('/api/estado');const m=$('modo');
+ if(estado.boveda_es_prueba){m.textContent='● Local · escritura en prueba'}else{m.textContent=estado.puede_escribir?'● Bóveda real':'● Bóveda real · solo lectura';m.classList.add('warn')}
+ $('obsidian').href='obsidian://open?path='+encodeURIComponent(estado.boveda+'/index.md');
+ $('pie').textContent=`Panel local · solo escucha en este Mac · escritura: ${estado.boveda} · tu bóveda real ${estado.boveda_real_existe?'conectada al mapa en solo lectura':'no encontrada: revisa boveda_real en config.json'}`;
+ const v=await api('/api/version');$('ver').textContent='v'+v.version}
+const marca=x=>x.ok===true?'✔':x.ok===false?'✖':'·';
+async function cargarAgentes(refrescar=true){agentes=await api('/api/agentes?refrescar='+(refrescar?1:0));const team=$('team');team.replaceChildren();
+ agentes.forEach(a=>{const b=h('button',{class:'ghost',title:'Llamada mínima real para verificar autenticación y permisos'},a.tipo==='simulador'?'—':'Probar');if(a.tipo==='simulador')b.disabled=true;
+  b.onclick=async()=>{b.disabled=true;b.textContent='Probando…';await api(`/api/agentes/${a.id}/probar`,{});await cargarAgentes(false);cargarActividad()};
+  const left=h('div',{class:'agent',title:`Instalación: ${a.instalado.detalle}\nAutenticación: ${a.autenticado.detalle}\nPermisos: ${a.permisos.detalle}`},h('strong',{},h('i',{class:'dot',style:`background:${a.color};color:${a.color}`}),a.nombre),h('small',{},a.rol+(a.puente?` · vía ${a.puente}`:'')+(a.nube?' · nube':' · local')),h('div',{class:'checks'},`${marca(a.instalado)} instalado · ${marca(a.autenticado)} autenticación · ${marca(a.permisos)} permisos`));
+  team.append(h('div',{class:'row'},left,h('span',{class:'pill '+clsEstado[a.estado]},NOMBRE_ESTADO[a.estado]),b));
+  if(a.estado==='pendiente'&&a.conectar){const paso=a.instalado.ok?a.conectar.entrar:a.conectar.instalar;const cmd=paso.split('   ')[0];
+   const cp=h('button',{class:'ghost copiar'},'Copiar comando');cp.onclick=()=>{navigator.clipboard.writeText(cmd);cp.textContent='Copiado ✓'};
+   team.append(h('div',{class:'conectar'},h('span',{},a.instalado.ok?'Instalado. Falta iniciar sesión y pulsar «Probar»:':'Para conectarlo, en Terminal:'),h('code',{},paso),cp))}});
+ llenarAgentes()}
+function llenarAgentes(){const s=skills[active];if(!s)return;const sel=$('agent');sel.replaceChildren(h('option',{value:'auto'},'✦ Automático (router)'));
+ s.agentes.forEach(id=>{const a=agentes.find(x=>x.id===id);sel.append(h('option',{value:id},a?`${a.nombre} · ${NOMBRE_ESTADO[a.estado]}`:id))});sel.value='auto'}
+async function cargarSkills(){skills=await api('/api/skills');const deck=$('deck');deck.replaceChildren();
+ skills.forEach((s,i)=>{const b=h('button',{class:'skill',type:'button','aria-pressed':i===active,'aria-disabled':!s.disponible,title:s.motivo||''},h('strong',{},s.nombre),h('span',{},s.disponible?`${s.descripcion} · ficha: ${s.fichas.join(', ')}`:s.motivo));
+  b.onclick=()=>{active=i;deck.querySelectorAll('button').forEach((x,j)=>x.setAttribute('aria-pressed',j===i));llenarAgentes();$('launch').disabled=!s.disponible};deck.append(b)});llenarAgentes()}
+const fmt=n=>n>=1e9?(n/1e9).toFixed(1)+' B':n>=1e6?(n/1e6).toFixed(1)+' M':n>=1e3?(n/1e3).toFixed(1)+' k':String(n);
+const tiempo=s=>!s?'':s>=86400?`reinicia en ${Math.round(s/86400)} d`:s>=3600?`reinicia en ${Math.round(s/3600)} h`:`reinicia en ${Math.max(1,Math.round(s/60))} min`;
+async function cargarUso(){const r=await api('/api/consumo');const box=$('uso');const col={claude:'#D97757',codex:'#3B82F6',antigravity:'#34D399',local:'#EAB308'};
+ box.replaceChildren(...r.servicios.map(s=>{const max=Math.max(1,...s.serie.map(d=>d.tokens));
+  return h('div',{class:'uso-item',style:`--c:${col[s.id]||'#bdb2ff'}`},
+   h('div',{class:'uso-cab'},h('strong',{},h('i',{class:'dot',style:`background:${col[s.id]};color:${col[s.id]}`}),s.nombre),h('small',{},s.plan||(s.hay_datos?'registros locales':'sin datos aún'))),
+   ...s.limites.map(l=>h('div',{},h('div',{class:'barra'},h('i',{style:`width:${Math.min(100,l.usado)}%`})),h('div',{class:'limite'},h('span',{},`${l.nombre}: ${l.usado.toFixed(0)} % usado`),h('span',{},tiempo(l.reinicia_en_s))))),
+   h('div',{class:'uso-num'},h('div',{},h('b',{},fmt(s.tokens['5h'])),h('span',{},'últimas 5 h')),h('div',{},h('b',{},fmt(s.tokens.hoy)),h('span',{},'hoy')),h('div',{},h('b',{},fmt(s.tokens['7d'])),h('span',{},'7 días'))),
+   s.serie.length?h('div',{class:'spark',title:'Tokens por día (7 días)'},...s.serie.map(d=>h('i',{style:`height:${Math.max(6,d.tokens/max*100)}%`,title:`${d.dia}: ${fmt(d.tokens)}`}))):null,
+   s.cargados&&s.cargados.length?h('p',{class:'uso-nota'},'En memoria ahora: '+s.cargados.join(', ')):null,
+   h('p',{class:'uso-nota'},s.nota))}))}
+async function cargarEntregables(){window._ent=await api('/api/entregables');dibujarEntregables()}
+function dibujarEntregables(){const q=$('search').value.trim().toLowerCase();const m=(window._ent||[]).filter(e=>e.nombre.toLowerCase().includes(q));
+ $('artifacts').replaceChildren(...m.map(e=>{const r=row(e.nombre,e.tipo);if(e.tarea)r.append(h('a',{class:'ghost',href:'/tarea.html?id='+e.tarea},'Ver'));return r}));if(!m.length)$('artifacts').textContent='No hay coincidencias.'}
+async function cargarActividad(){const log=await api('/api/actividad');const box=$('activity');if(!log.length)return;box.replaceChildren(...log.slice(0,40).map(x=>{const r=row(x.texto,hora(x.ts),x.tipo==='error'?'Error':x.tipo==='fin'?'Hecho':x.tipo==='inicio'?'En curso':null,x.tipo==='error'?'bad':x.tipo==='fin'?'ok':'wait');if(x.tarea)r.querySelector('strong').replaceChildren(h('a',{href:'/tarea.html?id='+x.tarea},x.texto));return r}))}
+$('search').oninput=dibujarEntregables;$('refrescar').onclick=()=>cargarAgentes(true);$('abrirChat').onclick=()=>window.ChatAOS&&ChatAOS.abrir(true);
+$('launch').onclick=async()=>{const s=skills[active],msg=$('launchMsg');msg.className='msg-l';
+ const cuerpo={skill:s.id,proyecto:s.fichas[0],agente:$('agent').value,profundidad:$('effort').value,encargo:$('encargo').value,criterio:$('criterio').value,ejecutar:true};
+ if(!cuerpo.encargo.trim()||!cuerpo.criterio.trim()){msg.classList.add('bad');msg.textContent='Escribe el encargo y el criterio de cierre.';return}
+ const r=await api('/api/tareas',cuerpo);if(r.error){msg.classList.add('bad');msg.textContent=r.error;return}
+ const quien=(agentes.find(a=>a.id===r.tarea.agente)||{}).nombre||r.tarea.agente;
+ if(r.bloqueos.length){msg.classList.add('bad');msg.textContent=`${r.tarea.id} creada pero no se ejecutó: ${r.bloqueos.join(' ')}`}else{msg.classList.add('ok');msg.replaceChildren(`${r.tarea.id}: ${quien} en curso${r.router?' (elegido por el router: '+r.router.motivo+')':''}. `,h('a',{href:'/tarea.html?id='+r.tarea.id},'Ver evidencia'))}
+ cargarActividad()};
+$('actualizar').onclick=async()=>{const b=$('actualizar');b.disabled=true;$('velo').hidden=false;$('veloTxt').textContent='Buscando la última versión…';
+ const r=await api('/api/actualizar',{});
+ if(!r.ok){$('veloTxt').textContent=r.msg;setTimeout(()=>{$('velo').hidden=true;b.disabled=false},4000);return}
+ if(!r.reinicia){$('veloTxt').textContent=`Ya tienes la última versión (v${r.despues}).`;setTimeout(()=>{$('velo').hidden=true;b.disabled=false},2500);return}
+ $('veloTxt').textContent=`Actualizado a v${r.despues}. Reiniciando el panel…`;
+ const esperar=async()=>{try{await fetch('/api/version',{cache:'no-store'});location.reload()}catch(e){setTimeout(esperar,800)}};setTimeout(esperar,2500)};
+montar($('mini'),{compacto:true,onClick:()=>location.href='/maps.html',onDatos:g=>{$('miniTxt').textContent=`${g.es_real?'Tu bóveda':'Bóveda de prueba'} «${g.boveda}» en vivo · ${g.nodos.filter(n=>n.tipo==='nota').length} notas. Cuando un agente trabaja, lo verás viajar con su color.`},onEvento:()=>cargarActividad()});
+(async()=>{await cargarEstado();await cargarSkills();await cargarAgentes(true);cargarEntregables();cargarActividad();cargarUso();setInterval(()=>{cargarActividad();cargarEntregables()},4000);setInterval(cargarUso,30000)})();
+</script></body></html>
